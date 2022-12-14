@@ -42,12 +42,12 @@ abstract class GdxApp : GdxLifeCycleApplication() {
         camera.viewportWidth = width ?: this.width
         camera.viewportHeight = height ?: this.height
         camera.position.set(Vector3(0f, 0f, 0f))
-        configCamera()
+        configCamera(camera.viewportWidth,camera.viewportHeight)
         camera.update()
         updateProjector(camera.combined)
     }
 
-    protected open fun configCamera() {
+    protected open fun configCamera(width: Float,height: Float) {
 
     }
 
