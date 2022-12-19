@@ -83,6 +83,8 @@ operator fun Vector2.minus(other: Vector2) = vectorWith(other)
 
 operator fun Vector2.times(scalar: Float) = Vector2(x * scalar, y * scalar)
 
+operator fun Vector2.div(scalar: Float) = Vector2(x / scalar, y / scalar)
+
 operator fun Vector2.plus(other: Vector2) = Vector2(x + other.x, y + other.y)
 
 fun Bitmap.toGdxTexture(): Texture {
