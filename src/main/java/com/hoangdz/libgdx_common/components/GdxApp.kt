@@ -1,11 +1,13 @@
 package com.hoangdz.libgdx_common.components
 
+import androidx.annotation.CallSuper
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
 import com.hoangdz.libgdx_common.lifecycle.GdxLifeCycleApplication
 import com.hoangdz.libgdx_common.utils.assets_manager.GdxAssetsManger
+import com.hoangdz.libgdx_common.utils.interpolate.SinAxisInterpolate
 
 /**
  * Created by HoangDepTrai on 23, November, 2022 at 9:42 AM
@@ -17,6 +19,8 @@ abstract class GdxApp : GdxLifeCycleApplication() {
     val assetsManager by lazy { GdxAssetsManger(this) }
 
     val drawingBatch by lazy { GDXDrawingBatchManager() }
+
+    val sinInterpolation by lazy { SinAxisInterpolate() }
 
     val width
         get() = Gdx.graphics.width * 1f
@@ -42,12 +46,18 @@ abstract class GdxApp : GdxLifeCycleApplication() {
         camera.viewportWidth = width ?: this.width
         camera.viewportHeight = height ?: this.height
         camera.position.set(Vector3(0f, 0f, 0f))
-        configCamera(camera.viewportWidth,camera.viewportHeight)
+        configCamera(camera.viewportWidth, camera.viewportHeight)
         camera.update()
         updateProjector(camera.combined)
     }
 
-    protected open fun configCamera(width: Float,height: Float) {
+    @CallSuper
+    override fun render() {
+        super.render()
+        sinInterpolation.update()
+    }
+
+    protected open fun configCamera(width: Float, height: Float) {
 
     }
 
@@ -57,6 +67,7 @@ abstract class GdxApp : GdxLifeCycleApplication() {
 
     override fun dispose() {
         super.dispose()
+        sinInterpolation.dispose()
         assetsManager.dispose()
         drawingBatch.dispose()
     }
