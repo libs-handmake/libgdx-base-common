@@ -22,17 +22,23 @@ abstract class GdxApp : GdxLifeCycleApplication() {
 
     val sinInterpolation by lazy { SinAxisInterpolate() }
 
+    protected var _width = 0f
+
+    protected var _height = 0f
+
     val width
-        get() = Gdx.graphics.width * 1f
+        get() = _width
 
     val height
-        get() = Gdx.graphics.height * 1f
+        get() = _height
 
 
     open val needToListenResizeChange = true
 
     override fun resize(width: Int, height: Int) {
         super.resize(width, height)
+        _width = width * 1f
+        _height = height * 1f
         if (needToListenResizeChange)
             updateCamera(width * 1f, height * 1f)
     }
@@ -42,9 +48,14 @@ abstract class GdxApp : GdxLifeCycleApplication() {
         updateCamera()
     }
 
-    private fun updateCamera(width: Float? = null, height: Float? = null) {
+    protected fun updateCamera(width: Float? = null, height: Float? = null) {
         camera.viewportWidth = width ?: this.width
         camera.viewportHeight = height ?: this.height
+        if (camera.viewportWidth != _width) {
+            _width = camera.viewportWidth
+        }
+        if (camera.viewportHeight != _height)
+            _height = camera.viewportHeight
         camera.position.set(Vector3(0f, 0f, 0f))
         configCamera(camera.viewportWidth, camera.viewportHeight)
         camera.update()
