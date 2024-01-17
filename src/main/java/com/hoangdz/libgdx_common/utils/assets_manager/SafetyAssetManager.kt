@@ -1,5 +1,6 @@
 package com.hoangdz.libgdx_common.utils.assets_manager
 
+import android.util.Log
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.assets.AssetLoaderParameters
 import com.badlogic.gdx.assets.AssetManager
@@ -24,8 +25,7 @@ open class SafetyAssetManager : AssetManager {
     }
 
     constructor(gdxApp: GdxApp, resolver: FileHandleResolver?, defaultLoaders: Boolean) : super(
-        resolver,
-        defaultLoaders
+        resolver, defaultLoaders
     ) {
         this.gdxApp = gdxApp
     }
@@ -39,22 +39,19 @@ open class SafetyAssetManager : AssetManager {
     fun <T : Any?> loadSafe(fileName: String?, type: Class<T>?) {
         if (isLoadedSafe(fileName) || queueLoading[fileName] == true) return
         try {
-            if (!fileName.isNullOrEmpty())
-                queueLoading[fileName] = true
+            if (!fileName.isNullOrEmpty()) queueLoading[fileName] = true
             load(fileName, type)
         } catch (e: Exception) {
+            Log.e("loadSafe: ", e.localizedMessage ?: "Can not load asset for $fileName")
         }
     }
 
     fun <T : Any?> loadSafe(
-        fileName: String?,
-        type: Class<T>?,
-        parameter: AssetLoaderParameters<T>?
+        fileName: String?, type: Class<T>?, parameter: AssetLoaderParameters<T>?
     ) {
         if (isLoadedSafe(fileName) || queueLoading[fileName] == true) return
         try {
-            if (!fileName.isNullOrEmpty())
-                queueLoading[fileName] = true
+            if (!fileName.isNullOrEmpty()) queueLoading[fileName] = true
             load(fileName, type, parameter)
         } catch (e: Exception) {
         }
