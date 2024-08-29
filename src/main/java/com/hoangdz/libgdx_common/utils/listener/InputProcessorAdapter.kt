@@ -26,6 +26,10 @@ open class InputProcessorAdapter : InputProcessor {
        return false
     }
 
+    override fun touchCancelled(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        return false
+    }
+
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
        return false
     }

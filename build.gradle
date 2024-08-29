@@ -50,11 +50,15 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
+    def gdxVersion = "1.12.1"
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
     //libgdx
+    api("com.badlogicgames.gdx:gdx:$gdxVersion")
     api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
@@ -64,7 +68,6 @@ dependencies {
 
 tasks.register('copyAndroidNatives') {
     doFirst {
-        file("libs/armeabi/").mkdirs()
         file("libs/armeabi-v7a/").mkdirs()
         file("libs/arm64-v8a/").mkdirs()
         file("libs/x86_64/").mkdirs()
@@ -74,7 +77,6 @@ tasks.register('copyAndroidNatives') {
             def outputDir = null
             if (jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
             if (jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
-            if (jar.name.endsWith("natives-armeabi.jar")) outputDir = file("libs/armeabi")
             if (jar.name.endsWith("natives-x86_64.jar")) outputDir = file("libs/x86_64")
             if (jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
             if (outputDir != null) {
@@ -88,8 +90,6 @@ tasks.register('copyAndroidNatives') {
     }
 }
 
-tasks.configureEach { packageTask ->
-    if (packageTask.name.contains("package")) {
-        packageTask.dependsOn 'copyAndroidNatives'
-    }
+tasks.matching { it.name.contains("merge") && it.name.contains("JniLibFolders") }.configureEach { packageTask ->
+    packageTask.dependsOn 'copyAndroidNatives'
 }
